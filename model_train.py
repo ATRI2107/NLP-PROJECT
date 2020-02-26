@@ -110,6 +110,7 @@ sent_list = []
 results=[]
 cv = KFold(5, shuffle=True)
 count=1
+pkl_filename="nlp_model.pkl"
 for train,test in cv.split(df):
     x_train,x_test,y_train,y_test = df.iloc[train], df.iloc[test], y.iloc[train], y.iloc[test]
     train_set = x_train['essay']
@@ -137,6 +138,8 @@ for train,test in cv.split(df):
     y_pred = lstm_model.predict(test_vec)
     if count == 5:
          lstm_model.save('./final_lstm.h5')
+         with open(pkl_filename,'wb') as file:
+             pickle.dump(lstm_model,file)
     y_pred = np.around(y_pred)
     result = cohen_kappa_score(y_test.values,y_pred,weights='quadratic')
     print("Kappa Score: {}".format(result))
