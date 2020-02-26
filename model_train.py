@@ -8,8 +8,8 @@ import numpy as np
 import pandas as pd
 import nltk
 from nltk.tokenize import RegexpTokenizer
-from nltk.corpus import stopwords 
-
+from nltk.corpus import stopwords
+import pickle 
 
 # In[3]:
 
@@ -107,6 +107,7 @@ from sklearn.metrics import cohen_kappa_score
 from gensim.models import Word2Vec
 
 sent_list = []
+results=[]
 cv = KFold(5, shuffle=True)
 count=1
 for train,test in cv.split(df):
@@ -135,7 +136,7 @@ for train,test in cv.split(df):
     lstm_model.fit(train_vec, y_train, batch_size=64, epochs=50)
     y_pred = lstm_model.predict(test_vec)
     if count == 5:
-         lstm_model.save('./model_weights/final_lstm.h5')
+         lstm_model.save('./final_lstm.h5')
     y_pred = np.around(y_pred)
     result = cohen_kappa_score(y_test.values,y_pred,weights='quadratic')
     print("Kappa Score: {}".format(result))
